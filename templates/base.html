@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+{% load browserid %}
+{% load staticfiles %}
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		
+		<title>{% block title %}Home{% endblock %} - MoonBizGame</title>
+		<link rel="stylesheet" href="{% static 'css/main.css' %}">
+		<script type="text/javascript" src="{% if debug %}{% static "js/jquery-1.7.2.js" %}{% else %}{% static "js/jquery-1.7.2.min.js" %}{% endif %}"></script>
+		{% block extrahead %}
+		{% endblock %}
+	</head>
+	<body>
+	{% browserid_info %}
+	    <header>
+	      <h1>MoonBizGame</h1>
+	      <div class="authentication">
+	        {% if user.is_authenticated %}
+	          {% browserid_logout text='Logout' %}
+	        {% else %}
+	          {% browserid_login text='Login' %}
+	        {% endif %}
+	      </div>
+	    </header>
+	    <nav><a href="{% url 'home' %}">Home</a> <a href="{% url 'credits' %}">Credits</a></nav>
+	    
+		{% block content %}
+		{% endblock %}
+		
+		<footer>
+		
+		</footer>
+		{% browserid_js %}
+	</body>
+</html>

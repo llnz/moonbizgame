@@ -1,0 +1,7 @@
+moonbizgame/localsettings.py
+.project
+.pydevproject
+*~
+*.pyc
+*.pyo
+*.db
