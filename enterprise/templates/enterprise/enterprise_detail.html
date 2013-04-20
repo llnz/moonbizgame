@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load humanize %} 
+{% block title %}{{ enterprise.name }}{% endblock %}
+
+{% block content %}
+<h1>{{ enterprise.name }}</h1>
+
+<article>
+<h1>Recent Actions</h1>
+<ul>
+{% for action in recent_actions %}
+  <li>{{ action.when_igt }} - {{ action.description }}</li>
+{% endfor %}
+</ul>
+<p>For more view the <a href="{% url 'enterprise_action_log' enterprise.slug %}">Action Log</a></p>
+</article>
+
+<article>
+<h1>Recent Transactions</h1>
+<table class="transaction_log">
+  <thead>
+    <tr><th>Date</th><th>Description</th><th>Amount</th></tr>
+  </thead>
+  <tbody>
+{% for transaction in recent_transactions %}
+    <tr><td>{{ transaction.when_igt }}</td><td>{{ transaction.details }}</td><td>{{ transaction.amount|intcomma }}</td></tr>
+{% endfor %}
+  </tbody>
+</table>
+<p>For more view the <a href="{% url 'enterprise_transaction_log' enterprise.slug %}">Transaction Log</a></p>
+</article>
+
+{% endblock %}
