@@ -7,6 +7,7 @@
 <h1>{{ enterprise.name }}</h1>
 
 <p><a href="{% url 'launch_purchasedconfigs' enterprise.slug %}">Launches</a>
+  <a href="{% url 'enterprise_endturn' enterprise.slug %}">End Turn (make stuff happen)</a></p>
 
 <article>
 <h1>Recent Actions</h1>

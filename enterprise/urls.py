@@ -3,7 +3,8 @@ from django.conf.urls.defaults import *
 
 from django.contrib.auth.decorators import login_required
 
-from enterprise.views import EnterpriseDetail, ActionList, TransactionList, CreateGame
+from enterprise.views import EnterpriseDetail, ActionList, TransactionList, CreateGame,\
+    EndTurn
 
 urlpatterns = patterns('getclassie.studio.views',
                       
@@ -11,6 +12,6 @@ urlpatterns = patterns('getclassie.studio.views',
     url(r'^(?P<enterprise>[a-zA-Z0-9_-]+)/$', login_required(EnterpriseDetail.as_view()), name='enterprise_details'),
     url(r'^(?P<enterprise>[a-zA-Z0-9_-]+)/actions/$', login_required(ActionList.as_view()), name='enterprise_action_log'),
     url(r'^(?P<enterprise>[a-zA-Z0-9_-]+)/transactions/$', login_required(TransactionList.as_view()), name='enterprise_transaction_log'),
-
+    url(r'^(?P<enterprise>[a-zA-Z0-9_-]+)/end_turn/$', login_required(EndTurn.as_view()), name='enterprise_endturn'),
     
     )

@@ -3,8 +3,12 @@ from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.template.defaultfilters import slugify
+from django.http import HttpResponseRedirect
 
 from django.views.generic import DetailView, ListView, CreateView
+from django.views.generic.base import View
+
+from moonbizgame import game
 
 from enterprise.models import Enterprise, Universe, ActionRecord, Transaction
 from enterprise.forms import EnterpriseAddForm
@@ -84,8 +88,17 @@ class CreateGame(CreateView):
                                   acc_type='Equity', amount=form.instance.start_cash)
         transaction.save()
         
+        game.start_game(form.instance)
+        
         return response
     
+class EndTurn(EnterpriseContextMixin, View):
+    
+    def get(self, request, *args, **kwargs):
+        game.end_turn(self.enterprise)
+        
+        return HttpResponseRedirect(reverse('enterprise_details', kwargs={'enterprise': self.enterprise.slug}))
+
 class Portal(ListView):
     template_name='home.html'
     context_object_name = 'enterprises'
