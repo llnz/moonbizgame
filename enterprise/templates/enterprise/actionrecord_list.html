@@ -9,7 +9,7 @@
 <article>
 <ul>
 {% for action in actions %}
-  <li>{{ action.when_igt }} - {{ action.description }}</li>
+  <li>{{ action.when_igt|date }} - {{ action.description }}</li>
 {% endfor %}
 </ul>
 {% if is_paginated %}

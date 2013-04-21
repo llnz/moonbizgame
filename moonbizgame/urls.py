@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
+from enterprise.views import Portal
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -18,7 +19,7 @@ urlpatterns = patterns('',
     
     (r'^browserid/', include('django_browserid.urls')),
     
-    url(r'^$', TemplateView.as_view(template_name='home.html'), name='home'),
+    url(r'^$', Portal.as_view(), name='home'),
     url(r'^credits$', TemplateView.as_view(template_name='credits.html'), name='credits'),
     
     url(r'^enterprise/', include('enterprise.urls')),

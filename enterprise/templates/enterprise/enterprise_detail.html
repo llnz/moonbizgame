@@ -6,11 +6,13 @@
 {% block content %}
 <h1>{{ enterprise.name }}</h1>
 
+<p><a href="{% url 'launch_purchasedconfigs' enterprise.slug %}">Launches</a>
+
 <article>
 <h1>Recent Actions</h1>
 <ul>
 {% for action in recent_actions %}
-  <li>{{ action.when_igt }} - {{ action.description }}</li>
+  <li>{{ action.when_igt|date }} - {{ action.description }}</li>
 {% endfor %}
 </ul>
 <p>For more view the <a href="{% url 'enterprise_action_log' enterprise.slug %}">Action Log</a></p>
@@ -24,7 +26,7 @@
   </thead>
   <tbody>
 {% for transaction in recent_transactions %}
-    <tr><td>{{ transaction.when_igt }}</td><td>{{ transaction.details }}</td>
+    <tr><td>{{ transaction.when_igt|date }}</td><td>{{ transaction.details }}</td>
       <td align="right">{{ transaction.amount|intcomma }}</td></tr>
 {% endfor %}
   </tbody>

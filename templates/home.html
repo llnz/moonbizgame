@@ -3,6 +3,20 @@
 {% block content %}
 <h1>Welcome</h1>
 <p>This is the site for the MoonBizGame.</p>
+{% if user.is_authenticated %}
+<article>
+<h1>Play the game</h1>
+{% if enterprises %}
+<p>Continue playing a previous started game:</p>
+<ul>
+{% for enterprise in enterprises %}
+<li><a href="{% url 'enterprise_details' enterprise.slug %}">{{ enterprise.name }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+<p>You can <a href="{% url 'enterprise_start_game' %}">create a new game</a> and start playing now.</p>
+</article>
+{% endif %}
 <article>
 <h1>Persona Login</h1>
 <p>You don't need to create a username and password for this site. You login using

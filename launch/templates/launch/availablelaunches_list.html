@@ -5,9 +5,9 @@
 
 {% block content %}
 <h1>Available Launches</h1>
-<p><a href="{% url 'enterprise_details' enterprise.slug %}">Back to {{ enterprise.name }}</a></p>
+<p>Back to <a href="{% url 'enterprise_details' enterprise.slug %}">{{ enterprise.name }}</a>,
+  <a href="{% url 'launch_purchasedconfigs' enterprise.slug %}">Purchased Launches</a></p>
 
-<ul>
 {% for launch in launches %}
 <article>
   <h1>{{ launch.company }} {{ launch.product }} at {{ launch.when_igt }}</h1>
@@ -34,6 +34,8 @@
   {% endfor %}
   </ul>
 </article>
+{% empty %}
+<p>There are no launches available at this time. Maybe try later?</p>
 {% endfor %}
 
 {% if is_paginated %}

@@ -96,6 +96,8 @@ AUTHENTICATION_BACKENDS = (
 )
 
 LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL_FAILURE = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

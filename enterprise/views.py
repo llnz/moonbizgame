@@ -1,10 +1,13 @@
 
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
+from django.utils import timezone
+from django.template.defaultfilters import slugify
 
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, CreateView
 
-from enterprise.models import Enterprise
+from enterprise.models import Enterprise, Universe, ActionRecord, Transaction
+from enterprise.forms import EnterpriseAddForm
 
 class EnterpriseDetail(DetailView):
     context_object_name = 'enterprise'
@@ -45,3 +48,50 @@ class TransactionList(EnterpriseContextMixin, ListView):
     def get_queryset(self):
         return self.enterprise.transaction_set.all()
     
+class CreateGame(CreateView):
+    form_class = EnterpriseAddForm
+    template_name='enterprise/create_game.html'
+    
+    def get_success_url(self):
+        return reverse('enterprise_details', kwargs={'enterprise': self.object.slug})
+    
+    def form_valid(self, form):
+        thetime = timezone.now()
+        thetime = thetime.replace(hour=0, minute=0, second=0, microsecond=0)
+        universe = Universe(current_time=thetime, mode='Arcade')
+        universe.save()
+        form.instance.universe = universe
+        form.instance.created_igt = universe.current_time
+        form.instance.mode = "Arcade"
+        
+        slug = slugify(form.instance.name)
+        retry = 1
+        while Enterprise.objects.filter(slug=slug).count() != 0:
+            slug = slugify(form.instance.name + ' ' + retry)
+            retry += 1
+        
+        form.instance.slug = slug
+        
+        response = CreateView.form_valid(self, form)
+        
+        form.instance.owners.add(self.request.user)
+        
+        action = ActionRecord(enterprise=form.instance, when_igt=universe.current_time,
+                              description='Enterprise %s started' % form.instance.name)
+        action.save()
+        transaction = Transaction(enterprise=form.instance, when_igt=universe.current_time,
+                                  details='Initial Investment', 
+                                  acc_type='Equity', amount=form.instance.start_cash)
+        transaction.save()
+        
+        return response
+    
+class Portal(ListView):
+    template_name='home.html'
+    context_object_name = 'enterprises'
+    
+    def get_queryset(self):
+        if self.request.user.is_authenticated():
+            return Enterprise.objects.filter(owners=self.request.user).all()
+        else:
+            return Enterprise.objects.none()

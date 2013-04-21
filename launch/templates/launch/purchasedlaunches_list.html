@@ -4,11 +4,11 @@
 {% block title %}Purchased Launches{% endblock %}
 
 {% block content %}
-<h1>Available Launches</h1>
+<h1>Purchased Launches</h1>
 <p><a href="{% url 'enterprise_details' enterprise.slug %}">Back to {{ enterprise.name }}</a></p>
-<p>Launch Configurations owned by {{ enterprise.name }}</p>
+<p>You can <a href="{% url 'launch_available' enterprise.slug %}">purchase more launches</a></p>
+<h2>Launch Configurations owned by {{ enterprise.name }}</h2>
 
-<ul>
 {% regroup launchconfigs by launch as launch_sets %}
 {% for launch_set in launch_sets %}
 {% with launch_set.grouper as launch %}
@@ -19,7 +19,6 @@
   <p><strong>Launch Date:</strong> {{ launch.when_igt }}</p>
   <h2>Configurations Purchased</h2>
   <ul>
-
   {% for config in launch_set.list %}
     <li>Destination: {{ config.destination }} - Max Mass: {{ config.max_mass }} - Price ${{ config.price|intcomma }} -
     <a href="{% url 'launch_sell_config' enterprise.slug config.id %}">Sell</a></li>
@@ -27,7 +26,11 @@
   </ul>
 </article>
 {% endwith %}
+{% empty %}
+<p>No launches purchased yet. If you want to send something into space, you had better 
+  	<a href="{% url 'launch_available' enterprise.slug %}">buy one</a>.</p>
 {% endfor %}
+
 
 {% if is_paginated %}
 <div class="pagination">
