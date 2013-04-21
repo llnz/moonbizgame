@@ -24,7 +24,8 @@
   </thead>
   <tbody>
 {% for transaction in recent_transactions %}
-    <tr><td>{{ transaction.when_igt }}</td><td>{{ transaction.details }}</td><td>{{ transaction.amount|intcomma }}</td></tr>
+    <tr><td>{{ transaction.when_igt }}</td><td>{{ transaction.details }}</td>
+      <td align="right">{{ transaction.amount|intcomma }}</td></tr>
 {% endfor %}
   </tbody>
 </table>
