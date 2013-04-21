@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Purchase Config{% endblock %}
+
+{% block content %}
+<h1>Purchase Config</h1>
+<p>Back to <a href="{% url 'enterprise_details' enterprise.slug %}">{{ enterprise.name }}</a>,
+<a href="{% url 'launch_available' enterprise.slug %}">Available Launches</a> </p>
+
+<p><strong>Company:</strong> {{ launchconfig.launch.company }}<p>
+<p><strong>Product:</strong> {{ launchconfig.launch.product }}</p>
+<p><strong>Launch Date:</strong> {{ launchconfig.launch.when_igt }}</p>
+<p><strong>Destination:</strong> {{ launchconfig.destination }}</p>
+<p><strong>Maximum Mass:</strong> {{ launchconfig.max_mass }}</p>
+<p><strong>Price:</strong> ${{ launchconfig.price|intcomma }}</p>
+
+<p>Are you sure you want to purchase for ${{ launchconfig.price|intcomma }}?</p>
+
+<form method="POST" action="{% url 'launch_purchase_config' enterprise.slug launchconfig.id %}">
+{% csrf_token %}
+<p><input type="submit" value="Purchase"> <a href="{% url 'launch_available' enterprise.slug %}">Cancel</a></p>
+</form>
+
+{% endblock %}

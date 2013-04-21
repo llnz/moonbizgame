@@ -22,5 +22,7 @@ urlpatterns = patterns('',
     url(r'^credits$', TemplateView.as_view(template_name='credits.html'), name='credits'),
     
     url(r'^enterprise/', include('enterprise.urls')),
+    url(r'^launch/', include('launch.urls')),
+    
     
 )

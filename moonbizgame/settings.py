@@ -76,6 +76,8 @@ INSTALLED_APPS = (
     'django_browserid',
     
     'enterprise',
+    'launch',
+    
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

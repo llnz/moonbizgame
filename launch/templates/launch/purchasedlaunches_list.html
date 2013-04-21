@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Purchased Launches{% endblock %}
+
+{% block content %}
+<h1>Available Launches</h1>
+<p><a href="{% url 'enterprise_details' enterprise.slug %}">Back to {{ enterprise.name }}</a></p>
+<p>Launch Configurations owned by {{ enterprise.name }}</p>
+
+<ul>
+{% regroup launchconfigs by launch as launch_sets %}
+{% for launch_set in launch_sets %}
+{% with launch_set.grouper as launch %}
+<article>
+  <h1>{{ launch.company }} {{ launch.product }} at {{ launch.when_igt }}</h1>
+  <p><strong>Company:</strong> {{ launch.company }}</p>
+  <p><strong>Product:</strong> {{ launch.product }}</p>
+  <p><strong>Launch Date:</strong> {{ launch.when_igt }}</p>
+  <h2>Configurations Purchased</h2>
+  <ul>
+
+  {% for config in launch_set.list %}
+    <li>Destination: {{ config.destination }} - Max Mass: {{ config.max_mass }} - Price ${{ config.price|intcomma }} -
+    <a href="{% url 'launch_sell_config' enterprise.slug config.id %}">Sell</a></li>
+  {% endfor %}
+  </ul>
+</article>
+{% endwith %}
+{% endfor %}
+
+{% if is_paginated %}
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+{% endif %}
+
+{% endblock %}
