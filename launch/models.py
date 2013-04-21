@@ -6,6 +6,9 @@ class Launch(models.Model):
     product = models.CharField(max_length=100)
     when_igt = models.DateTimeField(db_index=True)
     
+    class Meta:
+        ordering = ['when_igt',]
+    
     def can_purchase_config(self, chosen_config):
         '''Can purchase a config
         
