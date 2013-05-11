@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.core.cache import cache
 
 class Universe(models.Model):
     '''This is a universe in the game
@@ -26,6 +27,34 @@ class Enterprise(models.Model):
     
     universe = models.ForeignKey(Universe)
     
+    def add_transaction(self, amount, details, acc_type):
+        curr_balance = self.get_balance()
+        new_balance = curr_balance + amount
+        transaction = Transaction(enterprise=self, when_igt=self.universe.current_time, 
+                                  amount=amount, details=details, 
+                                  acc_type=acc_type, balance=new_balance)
+        transaction.save()
+        
+        #set cache
+        cache.set("balance-%s" % self.id, new_balance)
+        
+    def get_balance(self):
+        
+        key = "balance-%s" % self.id
+        #get from cache
+        balance = cache.get(key)
+        
+        #else
+        if balance is None:
+            try:
+                balance = self.transaction_set.all()[0].balance
+            except KeyError:
+                balance = 0
+            #set cache
+            cache.set(key, balance)
+        
+        return balance
+    
     def __unicode__(self):
         return self.name
     
@@ -48,6 +77,7 @@ class Transaction(models.Model):
     amount = models.IntegerField()
     details = models.CharField(max_length=200)
     acc_type = models.CharField(max_length=50)
+    balance = models.IntegerField()
     
     def __unicode__(self):
         return '%s - %s - %s - %s' % (self.enterprise.name, self.when_igt, self.details, self.amount)

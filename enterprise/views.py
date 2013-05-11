@@ -10,7 +10,7 @@ from django.views.generic.base import View
 
 from moonbizgame import game
 
-from enterprise.models import Enterprise, Universe, ActionRecord, Transaction
+from enterprise.models import Enterprise, Universe, ActionRecord
 from enterprise.forms import EnterpriseAddForm
 
 class EnterpriseDetail(DetailView):
@@ -83,10 +83,9 @@ class CreateGame(CreateView):
         action = ActionRecord(enterprise=form.instance, when_igt=universe.current_time,
                               description='Enterprise %s started' % form.instance.name)
         action.save()
-        transaction = Transaction(enterprise=form.instance, when_igt=universe.current_time,
-                                  details='Initial Investment', 
+        form.instance.add_transaction(details='Initial Investment', 
                                   acc_type='Equity', amount=form.instance.start_cash)
-        transaction.save()
+        
         
         game.start_game(form.instance)
         

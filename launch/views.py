@@ -52,10 +52,9 @@ class PurchaseLaunchConfig(EnterpriseContextMixin, DetailView):
                                                         self.object.launch.product, 
                                                         self.object.launch.when_igt, self.object.price))
         action.save()
-        transaction = Transaction(enterprise=self.enterprise, when_igt=self.enterprise.universe.current_time,
-                                  details='Purchase of launch on %s' % self.object.launch.when_igt, 
+        self.enterprise.add_transaction(details='Purchase of launch on %s' % self.object.launch.when_igt, 
                                   acc_type='Expense', amount=-self.object.price)
-        transaction.save()
+        
         
         return HttpResponseRedirect(reverse('launch_purchasedconfigs', 
                                             kwargs={'enterprise': self.enterprise.slug}))
@@ -102,10 +101,8 @@ class SellLaunchConfig(EnterpriseContextMixin, DetailView):
                                                         self.object.launch.product, 
                                                         self.object.launch.when_igt, price))
         action.save()
-        transaction = Transaction(enterprise=self.enterprise, when_igt=self.enterprise.universe.current_time,
-                                  details='Sale of launch on %s' % self.object.launch.when_igt, 
+        self.enterprise.add_transaction(details='Sale of launch on %s' % self.object.launch.when_igt, 
                                   acc_type='Sale', amount=price)
-        transaction.save()
         
         return HttpResponseRedirect(reverse('launch_purchasedconfigs', 
                                             kwargs={'enterprise': self.enterprise.slug}))

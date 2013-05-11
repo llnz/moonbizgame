@@ -5,6 +5,7 @@
 
 {% block content %}
 <h1>{{ enterprise.name }}</h1>
+<p><strong>Current Balance:</strong> ${{ enterprise.get_balance|intcomma }}</p>
 
 <p><a href="{% url 'launch_purchasedconfigs' enterprise.slug %}">Launches</a>
   <a href="{% url 'enterprise_endturn' enterprise.slug %}">End Turn (make stuff happen)</a></p>
